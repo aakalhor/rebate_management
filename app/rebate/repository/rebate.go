@@ -33,9 +33,9 @@ func (r *rebateRepository) GetTransactionByID(ctx context.Context, id uuid.UUID)
 	return &domain.Transaction{}, nil
 }
 
-func (r *rebateRepository) StoreRebateClaim(ctx context.Context, claim domain.RebateClaim) (*domain.RebateClaim, error) {
+func (r *rebateRepository) StoreRebateClaim(ctx context.Context, transactionId uuid.UUID) (uuid.UUID, error) {
 	//TODO implement me
-	return &domain.RebateClaim{}, nil
+	return uuid.New(), nil
 }
 
 func (r *rebateRepository) ListClaimsWithinInterval(ctx context.Context, from time.Time, to time.Time) ([]domain.RebateClaim, error) {

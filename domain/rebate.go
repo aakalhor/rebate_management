@@ -57,6 +57,7 @@ type RebateUsecase interface {
 	SubmitTransaction(ctx context.Context, transaction Transaction) (*Transaction, error)
 	CalculateRebateOfTransaction(ctx context.Context, transactionId uuid.UUID) (float64, error)
 	ReportClaimsByPeriod(ctx context.Context, from time.Time, to time.Time) (*RebateClaimsReport, error)
+	SubmitRebateClaim(ctx context.Context, transactionId uuid.UUID) (claimId uuid.UUID, err error)
 }
 
 type RebateRepository interface {
@@ -64,6 +65,6 @@ type RebateRepository interface {
 	StoreTransaction(ctx context.Context, program Transaction) (*Transaction, error)
 	GetRebateByID(ctx context.Context, id uuid.UUID) (*RebateProgram, error)
 	GetTransactionByID(ctx context.Context, id uuid.UUID) (*Transaction, error)
-	StoreRebateClaim(ctx context.Context, claim RebateClaim) (*RebateClaim, error)
+	StoreRebateClaim(ctx context.Context, transactionId uuid.UUID) (claimId uuid.UUID, err error)
 	ListClaimsWithinInterval(ctx context.Context, from time.Time, to time.Time) ([]RebateClaim, error)
 }

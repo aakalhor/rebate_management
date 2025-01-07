@@ -104,6 +104,11 @@ func (r *rebateUsecase) ReportClaimsByPeriod(ctx context.Context, from time.Time
 
 }
 
+func (r *rebateUsecase) SubmitRebateClaim(ctx context.Context, transactionId uuid.UUID) (claimId uuid.UUID, err error) {
+	//TODO implement me
+	return r.r.StoreRebateClaim(ctx, transactionId)
+}
+
 func New(r domain.RebateRepository) (*rebateUsecase, error) {
 	return &rebateUsecase{
 		r: r,
