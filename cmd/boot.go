@@ -41,9 +41,6 @@ func boot(db *dynamodb.Client) {
 
 func Boot() {
 
-	//const dsn = "host=rebate-home-task-instance-1.cr2uecqakjio.us-east-1.rds.amazonaws.com user=postgres password=Bademjoon_1379 dbname=rebate-home-task port=5432 sslmode=require TimeZone=UTC"
-	//var dsn string
-	//var db *gorm.DB
 	awsCfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-1")) // Update region if necessary
 	if err != nil {
 		log.Fatalf("Unable to load AWS config: %v", err)
