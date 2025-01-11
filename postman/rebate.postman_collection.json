@@ -1,0 +1,211 @@
+{
+	"info": {
+		"_postman_id": "10ec87b4-2759-4086-a1b3-decfd46c1294",
+		"name": "rebate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create rebate",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"program_name\": \"Camapasus2 Discount\",\r\n  \"percentage\": 25,\r\n  \"start_date\": \"2025-01-01T00:00:00Z\",\r\n  \"end_date\": \"2025-12-31T23:59:59Z\",\r\n  \"eligibility_criteria\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/rebate",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"rebate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 100,\r\n  \"date\": \"2025-01-09T00:00:00Z\",\r\n  \"rebate_id\": \"c28a05cb-6a77-4b06-8069-7efa7da4a09c\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create claim",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "transaction_id",
+						"value": "\"e6348498-2fd3-47c3-bff4-153bbd3f218e\"",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/claim?transaction_id=\"0f0564c1-a492-4e66-93e8-ace61e5e1ddc\"",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"claim"
+					],
+					"query": [
+						{
+							"key": "transaction_id",
+							"value": "\"0f0564c1-a492-4e66-93e8-ace61e5e1ddc\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "calculate debate amount",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}calculate?transaction_id=0f0564c1-a492-4e66-93e8-ace61e5e1ddc",
+					"host": [
+						"{{base_url}}calculate"
+					],
+					"query": [
+						{
+							"key": "transaction_id",
+							"value": "0f0564c1-a492-4e66-93e8-ace61e5e1ddc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "reporting",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"start_date\": \"2022-01-01\",\r\n  \"end_date\": \"2026-01-01\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}reporting",
+					"host": [
+						"{{base_url}}reporting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change claim status",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}api/claim?claim_id=1f866ee5-739f-4f62-ac09-6891fe8c50e0&status=accepted",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"claim"
+					],
+					"query": [
+						{
+							"key": "claim_id",
+							"value": "1f866ee5-739f-4f62-ac09-6891fe8c50e0"
+						},
+						{
+							"key": "status",
+							"value": "accepted"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/",
+			"type": "default"
+		}
+	]
+}

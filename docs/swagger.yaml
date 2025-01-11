@@ -1,0 +1,267 @@
+basePath: /
+definitions:
+  http.ClaimMetrics:
+    properties:
+      amount:
+        type: number
+      count:
+        type: integer
+    type: object
+  http.CodeResponse:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  http.DateRange:
+    properties:
+      end_date:
+        type: string
+      start_date:
+        type: string
+    required:
+    - end_date
+    - start_date
+    type: object
+  http.RebateClaim:
+    properties:
+      amount:
+        type: number
+      date:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      transaction_id:
+        type: string
+    type: object
+  http.RebateClaimsReport:
+    properties:
+      approved:
+        $ref: '#/definitions/http.ClaimMetrics'
+      from:
+        type: string
+      pending:
+        $ref: '#/definitions/http.ClaimMetrics'
+      rejected:
+        $ref: '#/definitions/http.ClaimMetrics'
+      to:
+        type: string
+      total:
+        $ref: '#/definitions/http.ClaimMetrics'
+    type: object
+  http.RebateProgram:
+    properties:
+      eligibility_criteria:
+        type: boolean
+      end_date:
+        type: string
+      id:
+        type: string
+      percentage:
+        type: number
+      program_name:
+        type: string
+      start_date:
+        type: string
+    required:
+    - eligibility_criteria
+    - end_date
+    - percentage
+    - program_name
+    - start_date
+    type: object
+  http.Transaction:
+    properties:
+      amount:
+        type: number
+      date:
+        type: string
+      id:
+        type: string
+      rebate_id:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: aakalhor2000@gmail.com
+    name: Amirali Kalhor
+    url: http://www.swagger.io/support
+  description: Comprehensive API documentation for the Rebate Program service. This
+    service handles rebate creation, transaction management, and claims processing.
+  termsOfService: http://swagger.io/terms/
+  title: Rebate Program Swagger API
+  version: "1.0"
+paths:
+  /api/calculate:
+    get:
+      consumes:
+      - application/json
+      description: Calculate the rebate amount for a transaction. Requires a valid
+        transaction ID.
+      parameters:
+      - description: Transaction ID (UUID format)
+        in: query
+        name: transaction_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Rebate amount successfully calculated
+          schema:
+            additionalProperties:
+              type: number
+            type: object
+        "400":
+          description: Invalid transaction or rebate calculation error
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "404":
+          description: Transaction not found
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+      summary: Calculate rebate amount
+      tags:
+      - Rebate Management
+  /api/claim:
+    post:
+      consumes:
+      - application/json
+      description: Submit a claim using a valid transaction ID. The claim must meet
+        eligibility criteria.
+      parameters:
+      - description: Transaction ID (UUID format)
+        in: query
+        name: transaction_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Claim successfully created
+          schema:
+            $ref: '#/definitions/http.RebateClaim'
+        "400":
+          description: Invalid input or user not eligible
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "404":
+          description: Transaction not found
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+      summary: Submit a rebate claim
+      tags:
+      - Rebate Management
+  /api/rebate:
+    post:
+      consumes:
+      - application/json
+      description: Register a rebate program. Program names must be unique and include
+        a percentage rebate.
+      parameters:
+      - description: Rebate Program Details
+        in: body
+        name: rebate
+        required: true
+        schema:
+          $ref: '#/definitions/http.RebateProgram'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Rebate program successfully created
+          schema:
+            $ref: '#/definitions/http.RebateProgram'
+        "400":
+          description: Invalid input or duplicate program name
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+      summary: Register a new rebate program
+      tags:
+      - Rebate Management
+  /api/reporting:
+    post:
+      consumes:
+      - application/json
+      description: Generate a detailed report of claims within a specified date range.
+      parameters:
+      - description: Date Range (start_date and end_date in YYYY-MM-DD format)
+        in: body
+        name: dateRange
+        required: true
+        schema:
+          $ref: '#/definitions/http.DateRange'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Claims report successfully generated
+          schema:
+            $ref: '#/definitions/http.RebateClaimsReport'
+        "400":
+          description: Invalid date range or input
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+      summary: Generate claims report
+      tags:
+      - Reporting
+  /api/transaction:
+    post:
+      consumes:
+      - application/json
+      description: Record a transaction for a rebate program. The transaction must
+        reference an existing rebate program.
+      parameters:
+      - description: Transaction Details
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/http.Transaction'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Transaction successfully recorded
+          schema:
+            $ref: '#/definitions/http.Transaction'
+        "400":
+          description: Invalid input or unable to create transaction
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "404":
+          description: Rebate program not found
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/http.CodeResponse'
+      summary: Record a new transaction
+      tags:
+      - Transaction Management
+schemes:
+- http
+swagger: "2.0"
