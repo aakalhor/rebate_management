@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .          # Build the app from the current directory
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app            # Mount the current directory into the container
+      - ./data:/data       # Persist SQLite database in ./data
+      - ~/.aws:/root/.aws:ro # Mount AWS credentials into the container
+    ports:
+      - "8080:8080"       # Map container port 8080 to host port 8080
+    environment:
+      - AWS_REGION=us-east-1 # Set the AWS region
+      - AWS_PROFILE=default  # Use the default AWS profile

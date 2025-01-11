@@ -1,7 +1,7 @@
 
 # Rebate Management System
 
-A Go-based rebate management system for managing rebate programs, transactions, and claims. The system uses **AWS DynamoDB** for storage and **Gin** for its HTTP API framework. Includes optional caching, real-time tracking for claims, and Swagger documentation for API exploration.
+A Go-based rebate management system for managing rebate programs, transactions, and claims. The system is designed with **Clean Architecture** principles and follows **Domain-Driven Design (DDD)** for better scalability, maintainability, and testability. It uses **AWS DynamoDB** for storage and **Gin** for its HTTP API framework. The implementation includes optional caching, real-time tracking for claims, and Swagger documentation for API exploration.
 
 ---
 
@@ -31,27 +31,30 @@ A Go-based rebate management system for managing rebate programs, transactions, 
 ---
 
 ## Features
-
 1. **Rebate Management**:
-   - Create rebate programs with specific eligibility criteria and validity periods.
-   - Submit transactions tied to rebate programs.
-   - Calculate rebates for transactions.
+    - Create rebate programs with specific eligibility criteria and validity periods.
+    - Submit transactions tied to rebate programs.
+    - Calculate rebates for transactions.
 
 2. **Claim Tracking**:
-   - Submit rebate claims and track their status.
-   - Real-time tracking of approved, pending, and rejected claims.
+    - Submit rebate claims and track their status.
+    - Real-time tracking of approved, pending, and rejected claims.
 
-3. **In-Memory Caching**:
-   - Optimize frequently requested reports for better performance.
+3. **Clean Architecture and DDD**:
+    - Designed with **Clean Architecture** to separate concerns and maintain testability.
+    - Uses **Domain-Driven Design (DDD)** principles to align the system's structure with business needs.
 
-4. **Swagger Integration**:
-   - Explore and test API endpoints with integrated Swagger documentation.
+4. **In-Memory Caching**:
+    - Optimize frequently requested reports for better performance.
 
-5. **Local Deployment**:
-   - Easily deployable locally using Docker and Docker Compose.
+5. **Swagger Integration**:
+    - Explore and test API endpoints with integrated Swagger documentation.
 
-6. **Scalability**:
-   - Designed for scalable and efficient use in production environments.
+6. **Local Deployment**:
+    - Easily deployable locally using Docker and Docker Compose.
+
+7. **Scalability**:
+    - Designed for scalable and efficient use in production environments.
 
 ---
 
@@ -142,16 +145,10 @@ You can use the Postman collection provided in this repository to test the API e
 This feature provides real-time tracking of rebate claims, showing how many are approved, pending, or rejected.
 
 1. Access the real-time dashboard:
-   - URL: `http://localhost:8080/api/claims/status`
+   - URL: `http://localhost:8080/`
 
 2. Response example:
-   ```json
-   {
-     "approved": 10,
-     "pending": 5,
-     "rejected": 2
-   }
-   ```
+   ![Real-Time Dashboard Response](assets/img.png)
 
 Use this to monitor claim statuses dynamically.
 
@@ -240,18 +237,5 @@ Verify the container can reach AWS services:
 docker exec -it <container_name> curl https://dynamodb.us-east-1.amazonaws.com
 ```
 
-### Check Time Synchronization
-Verify the container's time matches the host system:
-```bash
-docker exec -it <container_name> date
-```
-
-### Manual Time Update
-If needed, manually synchronize the time in the container:
-```bash
-docker exec -it <container_name> ntpdate -u pool.ntp.org
-```
-
----
 
 Let me know if you need further changes!

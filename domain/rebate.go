@@ -7,19 +7,19 @@ import (
 )
 
 type Transaction struct {
-	ID       uuid.UUID `json:"primaryKey"`
-	Amount   float64   `json:"unique;not null"`
-	Date     time.Time `json:"not null"`
-	RebateID uuid.UUID `json:"not null"`
+	ID       uuid.UUID
+	Amount   float64
+	Date     time.Time
+	RebateID uuid.UUID
 }
 
 type RebateProgram struct {
-	ID                  uuid.UUID `gorm:"primaryKey"`
-	ProgramName         string    `gorm:"unique;not null"`
-	Percentage          float64   `gorm:"not null"`
-	StartDate           time.Time `gorm:"not null"`
-	EndDate             time.Time `gorm:"not null"`
-	EligibilityCriteria bool      `gorm:"bool"`
+	ID                  uuid.UUID
+	ProgramName         string
+	Percentage          float64
+	StartDate           time.Time
+	EndDate             time.Time
+	EligibilityCriteria bool
 }
 
 type ClaimStatus string
@@ -57,7 +57,8 @@ type RebateUsecase interface {
 	SubmitTransaction(ctx context.Context, transaction Transaction) (*Transaction, error)
 	CalculateRebateOfTransaction(ctx context.Context, transactionId uuid.UUID) (float64, error)
 	ReportClaimsByPeriod(ctx context.Context, from time.Time, to time.Time) (*RebateClaimsReport, error)
-	SubmitRebateClaim(ctx context.Context, transactionId uuid.UUID) (claimId uuid.UUID, err error)
+	SubmitRebateClaim(ctx context.Context, claimId uuid.UUID, transactionId uuid.UUID, date time.Time) (*RebateClaim, error)
+	ChangeClaimStatus(ctx context.Context, claimId uuid.UUID, status ClaimStatus) (*RebateClaim, error)
 }
 
 type RebateRepository interface {
@@ -65,6 +66,10 @@ type RebateRepository interface {
 	StoreTransaction(ctx context.Context, program Transaction) (*Transaction, error)
 	GetRebateByID(ctx context.Context, id uuid.UUID) (*RebateProgram, error)
 	GetTransactionByID(ctx context.Context, id uuid.UUID) (*Transaction, error)
-	StoreRebateClaim(ctx context.Context, transactionId uuid.UUID) (claimId uuid.UUID, err error)
+	GetClaimByTransactionId(ctx context.Context, id uuid.UUID) (*RebateClaim, error)
+	StoreRebateClaim(ctx context.Context, calim RebateClaim) (*RebateClaim, error)
 	ListClaimsWithinInterval(ctx context.Context, from time.Time, to time.Time) ([]RebateClaim, error)
+	GetCachedReport(ctx context.Context, cacheKey string) (*RebateClaimsReport, error)
+	StoreCachedReport(ctx context.Context, cacheKey string, report *RebateClaimsReport, ttl time.Duration) error
+	ModifyClaimStatus(ctx context.Context, claimId uuid.UUID, status ClaimStatus) (*RebateClaim, error)
 }
